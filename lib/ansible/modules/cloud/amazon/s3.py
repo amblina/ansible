@@ -510,6 +510,10 @@ def main():
 
     if module.params.get('object'):
         obj = module.params['object']
+    
+    # Bucket deletion does not require obj param.  Prevents ambiguity with delobj.
+    if obj and mode == "delete":
+        module.fail_json(msg='Parameter obj cannot be used with mode=delete')
 
     # allow eucarc environment variables to be used if ansible vars aren't set
     if not s3_url and 'S3_URL' in os.environ:
